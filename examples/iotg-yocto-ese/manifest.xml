@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://gerrit.googlesource.com/git-repo/+/master/docs/manifest-format.md -->
+<manifest>
+  <remote name="git.openembedded.org"
+          alias="origin"
+          fetch="https://git.openembedded.org" />
+
+  <remote name="git.yoctoproject.org"
+          alias="origin"
+          fetch="https://git.yoctoproject.org" />
+
+  <remote name="github.com"
+          alias="origin"
+          fetch="https://github.com" />
+
+  <project name="openembedded-core"
+           remote="git.openembedded.org"
+           path="intel-embedded-system-enabling"
+           revision="ada5e64a97d5f269886772540e0bb0c324088b21" />
+
+  <project name="meta-openembedded"
+           remote="git.openembedded.org"
+           path="intel-embedded-system-enabling/meta-openembedded"
+           revision="a8055484f2829e8dfd03d5c8520b2c611aa7ebd2" />
+
+  <project name="bitbake"
+           remote="git.openembedded.org"
+           path="intel-embedded-system-enabling/bitbake"
+           revision="7e268c107bb0240d583d2c34e24a71e373382509" />
+
+  <project name="meta-intel"
+           remote="git.yoctoproject.org"
+           path="intel-embedded-system-enabling/meta-intel"
+           revision="f9e2e05f0d4896f4cfe674cbbc08294075ca9a04" />
+
+  <project name="intel/iotg-yocto-ese-main"
+           remote="github.com"
+           path="intel-embedded-system-enabling/meta-intel-embedded-system-enabling/meta-intel-iot-main"
+           revision="2b0b4f37ce7b803bb92050d04b8c6d7061c60149" />
+
+  <project name="intel/iotg-yocto-ese"
+           remote="github.com"
+           path="intel-embedded-system-enabling/meta-intel-embedded-system-enabling/meta-intel-distro"
+           revision="1bf4a8b5287cfbd5a7f728788bcce783a51c55f4" />
+
+  <project name="intel/iotg-yocto-ese-bsp"
+           remote="github.com"
+           path="intel-embedded-system-enabling/meta-intel-embedded-system-enabling/meta-intel-iot-bsp"
+           revision="bf342b713b139a9310d393623a930ed78156ccfb" />
+
+  <project name="OFS/meta-ofs"
+           remote="github.com"
+           path="intel-embedded-system-enabling/meta-ofs"
+           revision="refs/heads/main">
+    <linkfile src="examples/iotg-yocto-ese/bblayers.conf" dest="build/conf/bblayers.conf" />
+    <linkfile src="examples/iotg-yocto-ese/local.conf" dest="build/conf/local.conf" />
+  </project>
+</manifest>
