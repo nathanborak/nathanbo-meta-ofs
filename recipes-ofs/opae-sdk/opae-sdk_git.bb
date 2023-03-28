@@ -54,5 +54,6 @@ RDEPENDS:${PN} = "\
     bash \
     python3-core \
     python3-jsonschema \
+    python3-mmap \
     python3-pyyaml\
 "
