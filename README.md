@@ -5,6 +5,9 @@ and the [OPAE SDK](https://github.com/OFS/opae-sdk) for the Yocto Project\*.
 
 ## Building the IOTG Yocto-based ESE example
 
+The [`repo`](https://gerrit.googlesource.com/git-repo#install) tool is
+needed to clone the various Yocto layer repositories used in this example.
+
 Create and initialize the source directory:
 
 ```
