@@ -2,8 +2,8 @@ SUMMARY = "Open Programmable Acceleration Engine"
 HOMEPAGE = "https://github.com/OFS/opae-sdk"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5351f05d1aa340cb91bb885c2fd82fc7"
-SRC_URI = "git://github.com/OFS/opae-sdk;protocol=https;branch=master"
-SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/OFS/opae-sdk;protocol=https;branch=release/2.5.0"
+SRCREV = "5f590f07b0a48a1261b3c4cc8e106ee455969cf6"
 S = "${WORKDIR}/git"
 
 DEPENDS = "\
