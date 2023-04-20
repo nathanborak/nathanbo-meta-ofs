@@ -13,9 +13,9 @@ DEPENDS = "\
     libedit \
     python3 \
     python3-jsonschema-native \
+    python3-pip-native \
     python3-pybind11 \
     python3-pyyaml-native \
-    python3-setuptools-native \
     spdlog \
     tbb \
     udev \
@@ -26,6 +26,18 @@ inherit gitpkgv
 PKGV = "${GITPKGVTAG}"
 
 inherit cmake pkgconfig python3native
+
+# Tell pip install to use build dependencies provided by bitbake
+# in the recipe's sysroot, instead of trying to download and
+# install the build dependencies. The latter fails since bitbake
+# builds recipes in an isolated sandbox without network access.
+#
+# https://github.com/OFS/meta-ofs/issues/1
+# https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-no-build-isolation
+#
+# PIP_NO_CACHE_DIR and PIP_NO_BUILD_ISOLATION behave opposite to how they read
+# https://github.com/pypa/pip/issues/5735
+export PIP_NO_BUILD_ISOLATION = "off"
 
 # Work around linking error for Python extension modules
 #
