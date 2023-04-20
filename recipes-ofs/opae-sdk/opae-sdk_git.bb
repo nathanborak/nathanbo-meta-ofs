@@ -42,10 +42,11 @@ inherit cmake pkgconfig python3native
 #
 LDFLAGS += "--sysroot=${STAGING_DIR_TARGET}"
 
-# Work around setuptools overwriting hashbang with build path
+# Adjust interpreter path from build to target machine.
+# https://github.com/OFS/meta-ofs/issues/1#issuecomment-1515611193
 # https://cgit.openembedded.org/openembedded-core/tree/meta/classes-recipe/setuptools3_legacy.bbclass?id=8e9ec03c73e8c09e223d6f6cce297df363991350
 do_install:append() {
-    sed -i '1s:^#!${PYTHON}$:#!${bindir}/python3:' ${D}${bindir}/*
+    sed -i -e 's:${PYTHON}:${bindir}/python3:g' ${D}${bindir}/*
 }
 
 FILES:${PN}+= "${prefix}/*"
