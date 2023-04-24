@@ -1,0 +1,69 @@
+name: Build Yocto image
+# Ensure only a single instance of this workflow is run at any time.
+# The workflow caches the repo repository state and Yocto shared
+# state cache. While the Yocto cache is safe to share among
+# multiple processes, e.g., via an NFS share exported to multiple
+# build hosts, the repo state is not intended to be shared.
+concurrency: bitbake
+on:
+  push:
+    branches:
+      - main
+      - release/*
+    paths:
+      - .github/workflows/bitbake.yml
+      - conf/**
+      - examples/**
+      - recipes-*/**
+  workflow_dispatch:
+jobs:
+  bitbake:
+    runs-on: [self-hosted, linux, x64]
+    container:
+      image: ghcr.io/ofs/debian-yocto-dev
+      volumes:
+        - bitbake:/bitbake
+    steps:
+      - name: Cache repo repository state
+        run: |
+          mkdir -p /bitbake/repo
+          ln -rsnf -T /bitbake/repo .repo
+      - name: Clone Yocto manifest repository
+        run: repo init -b ${{ github.sha }} -m examples/iotg-yocto-ese/manifest.xml ${{ github.server_url }}/${{ github.repository }}
+      - name: Clone Yocto recipe repositories
+        run: repo sync -j 16
+      # Some Yocto recipes use the git:// transport protocol, which
+      # may fail in a restricted network that only allows https://.
+      - name: Override git with https transport protocol
+        run: git config --global url.https://git.yoctoproject.org/.insteadOf git://git.yoctoproject.org/
+      # https://docs.yoctoproject.org/overview-manual/concepts.html#shared-state-cache
+      # https://wiki.yoctoproject.org/wiki/Enable_sstate_cache#Verify_the_sstate_is_working
+      # > If sstate works, you can see something like:
+      # > NOTE: Preparing runqueue
+      # > NOTE: Executing SetScene Tasks
+      # > NOTE: Running setscene task 118 of 155 (virtual:native:/home/lulianhao/poky-build/edwin/poky/meta/recipes-devtools/pseudo/pseudo_git.bb:do_populate_sysroot_setscene)
+      # > NOTE: Running setscene task 119 of 155 (/home/lulianhao/poky-build/edwin/poky/meta/recipes-devtools/quilt/quilt-native_0.48.bb:do_populate_sysroot_setscene)
+      - name: Cache Yocto shared state cache
+        run: |
+          mkdir -p /bitbake/sstate-cache
+          ln -rsnf -T /bitbake/sstate-cache build/sstate-cache
+      # BitBake requires the bash shell, not any POSIX-compatible shell
+      # such as the default /bin/sh -> dash on Debian and Ubuntu.
+      - name: Build Yocto image
+        shell: bash
+        run: |
+          cd build
+          . ../intel-embedded-system-enabling/oe-init-build-env .
+          bitbake -k mc:x86-2021-minimal:core-image-full-cmdline
+      - name: Query Yocto image name
+        run: |
+          TARGET=$(readlink build/tmp-x86-2021-minimal-glibc/deploy/images/intel-corei7-64/core-image-full-cmdline-intel-corei7-64.wic.gz)
+          echo "IMAGE=${TARGET%.rootfs.wic.gz}" >> "$GITHUB_ENV"
+      - name: Upload Yocto image
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.IMAGE }}-${{ github.sha }}-${{ github.run_id }}
+          if-no-files-found: error
+          path: |
+            build/tmp-x86-2021-minimal-glibc/deploy/images/intel-corei7-64/${{ env.IMAGE }}.rootfs.manifest
+            build/tmp-x86-2021-minimal-glibc/deploy/images/intel-corei7-64/${{ env.IMAGE }}.rootfs.wic.gz
