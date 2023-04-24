@@ -1,0 +1,25 @@
+name: Build Yocto development container
+concurrency: container
+permissions:
+  packages: write
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/container.yml
+      - container/**
+  workflow_dispatch:
+jobs:
+  container:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      # Override user id in container to align with GitHub-hosted runners.
+      # https://github.com/actions/checkout/issues/47
+      - name: Build container image
+        run: docker build --build-arg BITBAKE_UID=1001 -t ghcr.io/ofs/debian-yocto-dev -f container/debian-yocto-dev/Dockerfile .
+      - name: Login to container registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+      - name: Push container image to registry
+        run: docker image push ghcr.io/ofs/debian-yocto-dev
