@@ -7,9 +7,6 @@ name: Build Yocto image
 concurrency: bitbake
 on:
   push:
-    branches:
-      - main
-      - release/*
     paths:
       - .github/workflows/bitbake.yml
       - conf/**
