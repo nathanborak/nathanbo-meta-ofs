@@ -23,6 +23,8 @@ jobs:
       image: ghcr.io/ofs/debian-yocto-dev
       volumes:
         - bitbake:/bitbake
+    env:
+      IMAGE_DIR: build/tmp-x86-2021-minimal-glibc/deploy/images/intel-corei7-64
     steps:
       - name: Cache repo repository state
         run: |
@@ -57,13 +59,13 @@ jobs:
           bitbake -k mc:x86-2021-minimal:core-image-full-cmdline
       - name: Query Yocto image name
         run: |
-          TARGET=$(readlink build/tmp-x86-2021-minimal-glibc/deploy/images/intel-corei7-64/core-image-full-cmdline-intel-corei7-64.wic.gz)
-          echo "IMAGE=${TARGET%.rootfs.wic.gz}" >> "$GITHUB_ENV"
+          TARGET=$(readlink "$IMAGE_DIR"/core-image-full-cmdline-intel-corei7-64.wic.gz)
+          echo "IMAGE_NAME=${TARGET%.rootfs.wic.gz}" >> "$GITHUB_ENV"
       - name: Upload Yocto image
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.IMAGE }}-${{ github.sha }}-${{ github.run_id }}
+          name: ${{ env.IMAGE_NAME }}-${{ github.sha }}-${{ github.run_id }}
           if-no-files-found: error
           path: |
-            build/tmp-x86-2021-minimal-glibc/deploy/images/intel-corei7-64/${{ env.IMAGE }}.rootfs.manifest
-            build/tmp-x86-2021-minimal-glibc/deploy/images/intel-corei7-64/${{ env.IMAGE }}.rootfs.wic.gz
+            ${{ env.IMAGE_DIR }}/${{ env.IMAGE_NAME }}.rootfs.manifest
+            ${{ env.IMAGE_DIR }}/${{ env.IMAGE_NAME }}.rootfs.wic.gz
