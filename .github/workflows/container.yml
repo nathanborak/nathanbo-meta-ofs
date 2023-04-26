@@ -1,5 +1,4 @@
 name: Build Yocto development container
-concurrency: container
 permissions:
   packages: write
 on:
