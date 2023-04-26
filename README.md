@@ -98,6 +98,37 @@ sgdisk -e /dev/nvme0n1
 
 `reboot` and select the storage device in the UEFI boot device menu.
 
+## Downloading test images
+
+For each push of a branch or tag to the
+[OFS/meta-ofs](https://github.com/OFS/meta-ofs) repository, a [test
+image](https://github.com/OFS/meta-ofs/actions/workflows/bitbake.yml) is
+built and attached as an artifact to the build job. While the test images
+may be downloaded using the web browser when logged into GitHub, this may
+be inconvenient if the web browser runs on your local laptop while the
+target system resides in remote location.
+
+The [GitHub command-line client](https://cli.github.com/) provides a
+convenient way of browsing and downloading test images on a remote machine.
+Follow the [GitHub CLI installation
+instructions](https://github.com/cli/cli#installation) for your OS and
+authenticate to GitHub:
+
+```
+gh auth login
+```
+
+(This stores an OATH token in `$HOME/.config/gh/hosts.yml`.)
+
+Browse the available test images, sorted newest to oldest:
+
+```
+gh run download --repo OFS/meta-ofs
+```
+
+Follow the instructions to select one or multiple test images, then press
+`Enter` to download into the current directory.
+
 ## License
 
 All metadata files (including, but not limited to `.bb`, `.bbappend`,
