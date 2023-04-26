@@ -75,6 +75,29 @@ To customise the image, start by modifying
 and
 [`bblayers.conf`](https://github.com/OFS/meta-ofs/tree/main/examples/iotg-yocto-ese/bblayers.conf).
 
+## Writing a Yocto image
+
+If you downloaded a [release image](https://github.com/OFS/meta-ofs/releases),
+verify its checksum:
+
+```
+sha256sum -c core-image-full-cmdline-intel-corei7-64-20230415005443.rootfs.wic.gz.sha256
+```
+
+On the target system, write the image to the storage, e.g., NVMe device:
+
+```
+zcat core-image-full-cmdline-intel-corei7-64-20230415005443.rootfs.wic.gz | dd of=/dev/nvme0n1 bs=1M status=progress
+```
+
+Relocate the GPT backup header to the end of the storage device:
+
+```
+sgdisk -e /dev/nvme0n1
+```
+
+`reboot` and select the storage device in the UEFI boot device menu.
+
 ## License
 
 All metadata files (including, but not limited to `.bb`, `.bbappend`,
