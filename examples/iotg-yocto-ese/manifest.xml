@@ -55,7 +55,7 @@
   <project name="OFS/meta-ofs"
            remote="github.com"
            path="intel-embedded-system-enabling/meta-ofs"
-           revision="0a92cb5991226a19e532969d7304a4629827dc00">
+           revision="57ea93a40f6c47c6517a82556d1929c3f050e43c">
     <linkfile src="examples/iotg-yocto-ese/bblayers.conf" dest="build/conf/bblayers.conf" />
     <linkfile src="examples/iotg-yocto-ese/local.conf" dest="build/conf/local.conf" />
   </project>
