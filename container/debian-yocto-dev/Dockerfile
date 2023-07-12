@@ -1,11 +1,11 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
 # https://docs.yoctoproject.org/ref-manual/system-requirements.html#ubuntu-and-debian
 #
 # The repo tool is available from the contrib archive
 # area, due to an incompatibility with Debian Policy.
 # https://bugs.debian.org/855846
-RUN sed -i 's# main$#& contrib#' /etc/apt/sources.list \
+RUN sed -i 's#^Components: main$#& contrib#' /etc/apt/sources.list.d/debian.sources \
     && apt-get -y update \
     && DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade \
     build-essential \
@@ -23,7 +23,7 @@ RUN sed -i 's# main$#& contrib#' /etc/apt/sources.list \
     libsdl1.2-dev \
     locales-all \
     mesa-common-dev \
-    pylint3 \
+    pylint \
     python3 \
     python3-git \
     python3-jinja2 \
