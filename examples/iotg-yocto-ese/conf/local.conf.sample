@@ -28,6 +28,17 @@ BBMULTICONFIG = "x86-2022-minimal"
 # https://github.com/OFS/opae-sdk/blob/master/doc/src/install_guide/installation_guide.md#hugepage-settings
 APPEND += "console=ttyS5,115200 iomem=relaxed intel_iommu=on pci=realloc default_hugepagesz=1G hugepagesz=1G hugepages=4 hugepagesz=2M hugepages=20"
 
+# The legacy /sys/firmware/efi/vars (CONFIG_EFI_VARS) is no longer
+# available in Linux 6.1 LTS (as opposed to 5.15 LTS), in which case
+# efibootmgr uses the new /sys/firmware/efi/efivars pseudo-filesystem,
+# which is mounted by systemd only if the efi feature is enabled.
+# https://bugzilla.redhat.com/show_bug.cgi?id=1972223#c8
+# https://github.com/systemd/systemd/blob/v250.5/src/shared/mount-setup.c#L107-L110
+# https://git.openembedded.org/openembedded-core/tree/meta/recipes-core/systemd/systemd_250.5.bb?h=kirkstone&id=4bb6373e5f4a1330a063d1afe855d6c24d5461e7#n70
+DISTRO_FEATURES:append = " \
+    efi \
+"
+
 # Packages for installation into the image.
 IMAGE_INSTALL:append = " \
     efibootmgr \
