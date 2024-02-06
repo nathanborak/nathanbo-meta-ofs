@@ -1,0 +1,44 @@
+diff --git a/Makefile b/Makefile
+index ba9c9c420218..9f4e4c027f7b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -5,7 +5,7 @@ KERNELDIR ?= /lib/modules/$(KERNEL)/build
+ LINUXINCLUDE := -I$(src)/include -I$(src)/include/uapi $(LINUXINCLUDE)
+ 
+ # make Kconfig conditionals always work
+-include $(KERNELDIR)/.config
++include $(KERNEL_BUILDDIR)/.config
+ 
+ ifeq ($(DEBUG),1)
+ DYNDBG = dyndbg=+p
+@@ -47,12 +47,6 @@ endif
+ # The module order matters; it determines the module order for
+ # both the insmod and rmmod targets. The module order is also
+ # leveraged for install packages by the dkms.conf file.
+-obj-m += fpga-mgr.o
+-obj-m += fpga-bridge.o
+-obj-m += fpga-region.o
+-ifndef CONFIG_FW_UPLOAD
+-obj-m += fpga-image-load.o
+-endif
+ obj-m += dfl.o
+ obj-m += dfl-fme.o
+ obj-m += dfl-afu.o
+@@ -72,17 +66,7 @@ obj-m += qsfp-mem-core.o
+ obj-m += qsfp-mem-dfl.o
+ obj-m += qsfp-mem-platform.o
+ obj-m += 8250_dfl.o
+-obj-m += intel-s10-phy.o
+-obj-m += intel-m10-bmc.o
+-obj-m += intel-m10-bmc-spi.o
+-obj-m += intel-m10-bmc-pmci.o
+-obj-m += intel-m10-bmc-log.o
+-obj-m += intel-m10-bmc-hwmon.o
+-obj-m += intel-m10-bmc-sec-update.o
+ obj-m += ptp_dfl_tod.o
+-obj-m += s10hssi.o
+-obj-m += n5010-phy.o
+-obj-m += n5010-hssi.o
+ obj-m += dfl-pci.o
+ ifeq ($(CONFIG_IOMMU_SVA),y)
+ obj-m += dfl-pci-sva.o
