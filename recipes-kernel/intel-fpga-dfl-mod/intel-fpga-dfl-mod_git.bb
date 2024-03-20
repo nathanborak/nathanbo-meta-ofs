@@ -12,6 +12,12 @@ S = "${WORKDIR}/git"
 MODULES_INSTALL_TARGET = "install"
 EXTRA_OEMAKE += "KERNELDIR=${STAGING_KERNEL_DIR} KERNELBUILDDIR=${STAGING_KERNEL_BUILDDIR}"
 
+# Do not split modules into separate, per-module packages such as
+# kernel-module-fpga-bridge-6.1.55-altera, which will result in
+# build failure due to conflicting .packagedata file entries if
+# the kernel recipe builds the same module packages already.
+KERNEL_SPLIT_MODULES = "0"
+
 # The inherit of module.bbclass will automatically name module packages with
 # "kernel-module-" prefix as required by the oe-core build environment.
 
